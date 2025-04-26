@@ -17,7 +17,7 @@ const handlePasswordz = () => {
 export const registerSchema = z.object({
   email: handleEmailz(),
   password: handlePasswordz(),
-  username: z.string().min(1, "Name is required"),
+  name: z.string().min(1, "Name is required"),
 });
 export type RegisterSchema = z.infer<typeof registerSchema>;
 

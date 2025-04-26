@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 export const AUTH_KEY = "auth";
 
-export const useAuth = () => {
+const useAuth = () => {
   const { setUser, setIsAuthenticated, user, isAuthenticated } = useAppStore();
   const router = useRouter();
 
@@ -122,9 +122,13 @@ export const useAuth = () => {
   };
 };
 
+const useRegister = () => {
+  return useMutation({ mutationFn: authApi.register });
+};
+
 const AuthServices = {
   querries: {},
-  mutations: {},
+  mutations: { useRegister },
   useAuth,
 };
 
