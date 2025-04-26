@@ -27,26 +27,29 @@ export const useAuth = () => {
   });
 
   const handleLogin = async (body: LoginSchema) => {
-    return toast.promise(
-      async () => {
-        // This function will be executed and its result will be returned
-        const loginRes = await loginMutation.mutateAsync(body);
-        const token = loginRes.data.data;
+    try {
+      // This function will be executed and its result will be returned
+      const loginRes = await loginMutation.mutateAsync(body);
+      const token = loginRes.data.data;
 
-        // Set token in cookie
-        setCookie(COOKIE_NAMES.ACCESS_TOKEN, token, {
-          maxAge: 60 * 60 * 24 * 7, // 7 days
-          path: "/",
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
-        });
+      if (!token) {
+        throw new Error("Invalid login response");
+      }
 
-        // Update httpInstance for the current session
-        httpInstance.setAccessToken(token);
+      // Set token in cookie
+      setCookie(COOKIE_NAMES.ACCESS_TOKEN, token, {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
 
+      // Update httpInstance for the current session
+      httpInstance.setAccessToken(token);
+
+      try {
         const userRes = await getProfileMutation.mutateAsync();
         const user = userRes.data.data;
-        // console.log(user);
 
         // Store user in state
         setIsAuthenticated(true);
@@ -54,7 +57,6 @@ export const useAuth = () => {
 
         // Store profile in cookie
         setObjectCookie("user_profile", user);
-        // return;
 
         // Redirect to dashboard or previous page
         const redirectUrl =
@@ -64,16 +66,12 @@ export const useAuth = () => {
         router.push(redirectUrl);
 
         return user; // Return the user object for the success message
-      },
-      {
-        loading: "Logging in...",
-        success: (user) => `Welcome back, ${user?.name || "User"}!`,
-        error: (err) =>
-          `Login failed: ${
-            err?.response?.data?.message || "Something went wrong"
-          }`,
+      } catch (profileError) {
+        throw profileError;
       }
-    );
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleLogout = () => {

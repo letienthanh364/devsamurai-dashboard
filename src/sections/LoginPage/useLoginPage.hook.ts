@@ -2,8 +2,6 @@ import mainPaths from "@/constants/path";
 import { useBoolean } from "@/hooks/useBoolean.hook";
 import { loginSchema, LoginSchema } from "@/rules/auth.rule";
 import AuthServices from "@/services/auth.service";
-import { ErrorRespone } from "@/types/_commons/response.type";
-import { isAxiosBadRequestError } from "@/utils/error.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -33,13 +31,9 @@ export const useLoginPage = () => {
     try {
       await handleLogin(data);
       router.push(mainPaths.home);
-    } catch (error) {
-      if (isAxiosBadRequestError<ErrorRespone>(error)) {
-        const formError = error.response?.data;
-        if (formError) {
-          setError("Email or password is not correct");
-        }
-      } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response.data.message === "Invalid credentials") {
         setError("Email or password is not correct");
       }
     } finally {
