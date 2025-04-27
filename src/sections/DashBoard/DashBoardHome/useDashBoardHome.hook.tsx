@@ -1,6 +1,8 @@
 import { useExtendDateRangePicker } from "@/components/dates/ExtendDateRangePicker/useExtendDateRangePicker.hook";
+import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 import { TooltipProps } from "recharts";
+import { mock_ContactData } from "./mock";
 
 export interface DataItem {
   date: string;
@@ -9,22 +11,6 @@ export interface DataItem {
 }
 
 // Initial mock data
-const mockData: DataItem[] = [
-  { date: "Mar 18", people: 2, companies: 4 },
-  { date: "Mar 21", people: 1, companies: 6 },
-  { date: "Mar 23", people: 2, companies: 4 },
-  { date: "Mar 25", people: 0, companies: 2 },
-  { date: "Mar 28", people: 1, companies: 4 },
-  { date: "Apr 1", people: 3, companies: 8 },
-  { date: "Apr 3", people: 0, companies: 2 },
-  { date: "Apr 5", people: 1, companies: 2 },
-  { date: "Apr 9", people: 2, companies: 6 },
-  { date: "Apr 13", people: 2, companies: 2 },
-  { date: "Apr 14", people: 0, companies: 2 },
-  { date: "Apr 15", people: 0, companies: 2 },
-  { date: "Apr 16", people: 0, companies: 2 },
-  { date: "Apr 17", people: 0, companies: 2 },
-];
 
 // Function to format date objects to our string format
 function formatDate(date: Date): string {
@@ -70,13 +56,21 @@ const useDashBoardHome = () => {
   TooltipProps<any, any>) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-2 border border-gray-200 shadow-sm rounded-md text-xs">
+        <div className="bg-black p-2 border rounded-lg space-y-1 w-40 text-xs">
           <p className="font-semibold">{label}</p>
           {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color || entry.stroke }}>
-              {entry.dataKey === "people" ? "People" : "Companies"}:{" "}
-              {entry.value}
-            </p>
+            <div key={index} className="flex justify-between items-center">
+              <div className="flex gap-2 items-center">
+                <div
+                  className={cn("w-3 h-3 rounded", {
+                    "bg-[#3b82f6]": entry.dataKey === "people",
+                    "bg-[#10b981]": entry.dataKey === "companies",
+                  })}
+                />
+                <p>Contacts</p>
+              </div>
+              <p className="">{entry.value}</p>
+            </div>
           ))}
         </div>
       );
@@ -208,7 +202,7 @@ const useDashBoardHome = () => {
     const completeData = createCompleteDataset(
       dateRange.startDate,
       dateRange.endDate,
-      mockData
+      mock_ContactData
     );
 
     // Calculate totals

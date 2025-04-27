@@ -1,0 +1,25 @@
+import { DataItem } from "./useDashBoardHome.hook";
+
+export const mock_ContactData: DataItem[] = [
+  { date: "Apr 1", people: 3, companies: 8 },
+  { date: "Apr 3", people: 0, companies: 2 },
+  { date: "Apr 5", people: 1, companies: 2 },
+  { date: "Apr 9", people: 2, companies: 6 },
+  { date: "Apr 13", people: 2, companies: 2 },
+  { date: "Apr 14", people: 0, companies: 2 },
+  { date: "Apr 15", people: 0, companies: 2 },
+  { date: "Apr 16", people: 0, companies: 2 },
+  { date: "Apr 17", people: 0, companies: 2 },
+  { date: "Apr 20", people: 1, companies: 4 },
+  { date: "Apr 22", people: 2, companies: 5 },
+  { date: "Apr 24", people: 3, companies: 7 },
+  { date: "Apr 25", people: 1, companies: 3 },
+  { date: "Apr 27", people: 2, companies: 6 },
+  { date: "Apr 30", people: 4, companies: 9 },
+  { date: "May 2", people: 2, companies: 4 },
+  { date: "May 5", people: 3, companies: 7 },
+  { date: "May 8", people: 1, companies: 3 },
+  { date: "May 10", people: 2, companies: 5 },
+  { date: "May 12", people: 0, companies: 2 },
+  { date: "May 15", people: 3, companies: 8 },
+];

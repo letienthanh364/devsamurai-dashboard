@@ -52,14 +52,14 @@ export default function ExtendDateRangePicker({
           variant="outlined"
           onClick={() => setDatePickerOpen(true)}
           className={cn(
-            " !bg-white rounded-lg border !border-[#d5d6d9] justify-center items-center gap-1 !flex !normal-case",
+            "rounded-lg border !border-border-common justify-center items-center gap-1 !flex !normal-case",
             className
           )}
           {...buttonProps}
         >
-          <CalendarIcon className="text-foreground h-4 w-4" />
+          <CalendarIcon className="h-4 w-4" />
           <div className="px-0.5 justify-center items-center flex">
-            <div className="text-foreground   leading-tight text-sm ">
+            <div className="leading-tight text-sm ">
               {startDate ? startDate?.format("MMM D, YYYY") : "Start Date"} –{" "}
               {endDate ? endDate?.format("MMM D, YYYY") : "End Date"}
             </div>

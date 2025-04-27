@@ -1,14 +1,14 @@
 "use client";
 
-import { IconButton } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import XIcon from "@mui/icons-material/X";
 import { useState } from "react";
+import Link from "next/link";
 export default function DashBoardHeader() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className="relative flex min-h-16 items-center gap-3 border-b px-6">
+    <div className="relative flex min-h-16 items-center gap-3 border-b border-border-common px-6">
       <div className="flex w-full items-center justify-between h-full">
         {/* Title and info section */}
         <div className="flex items-center gap-1">
@@ -28,7 +28,7 @@ export default function DashBoardHeader() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-info hidden size-3 shrink-0 text-foreground sm:inline cursor-pointer"
+              className="lucide lucide-info hidden size-3 shrink-0 text-text-primary sm:inline cursor-pointer"
               data-state={showTooltip ? "open" : "closed"}
             >
               <circle cx="12" cy="12" r="10"></circle>
@@ -48,21 +48,23 @@ export default function DashBoardHeader() {
 
         {/* Action buttons section */}
         <div className="flex items-center gap-2">
-          <IconButton
+          <Link
             href="https://github.com/achromaticlabs/pro"
             target="_blank"
             aria-label="GitHub"
+            className="hover:!bg-white/20 rounded-md w-9 h-9 flex items-center justify-center"
           >
-            <GitHubIcon fontSize="small" className="text-foreground" />
-          </IconButton>
+            <GitHubIcon fontSize="small" className="text-text-primary" />
+          </Link>
 
-          <IconButton
+          <Link
             href="https://x.com/achromaticlabs"
             target="_blank"
             aria-label="X (formerly Twitter)"
+            className="hover:!bg-white/20 rounded-md w-9 h-9 flex items-center justify-center"
           >
-            <XIcon fontSize="small" className="text-foreground" />
-          </IconButton>
+            <XIcon fontSize="small" className="text-text-primary" />
+          </Link>
         </div>
       </div>
     </div>

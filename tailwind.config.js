@@ -20,7 +20,9 @@ export default {
         border: {
           common: "#27272a",
         },
-        text: {},
+        text: {
+          primary: "#fafafa",
+        },
       },
       fontWeight: {
         medium: 500,

@@ -13,7 +13,7 @@ export default function DashBoardLayout({ children }: DashBoardLayoutProps) {
         <DashBoardSidebar />
         <div className="flex-grow flex flex-col">
           <DashBoardHeader />
-          <div className="flex-1 transition-all duration-300 ease-in-out">
+          <div className="flex-1 transition-all duration-300 ease-in-out overflow-auto custom-scrollbar">
             {children}
           </div>{" "}
         </div>

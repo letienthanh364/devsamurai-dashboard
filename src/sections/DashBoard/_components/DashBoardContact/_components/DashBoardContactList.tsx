@@ -10,11 +10,9 @@ export default function DashBoardContactList({
   contacts,
 }: ContactListProps) {
   return (
-    <div className="border border-[rgba(0,0,0,0.12)] rounded-xl shadow-sm bg-white overflow-hidden">
+    <div className="border border-border-common rounded-xl text-[#fafafa] shadow-sm bg-[#09090b] overflow-hidden">
       <div className="p-6 pb-2">
-        <p className="m-0 text-base font-medium !text-foreground text-left">
-          {title}
-        </p>
+        <p className="m-0 text-base font-semibold text-left">{title}</p>
       </div>
 
       <div className="px-6 pb-6">

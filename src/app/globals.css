@@ -18,11 +18,46 @@ button {
   cursor: pointer;
 }
 
-input:-webkit-autofill,
+/* input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition-delay: 9999s;
   -webkit-text-fill-color: white;
-  -webkit-box-shadow: 0 0 0 1000px black inset;
+  -webkit-box-shadow: 0 0 0 1000px black inset !important;
+  box-shadow: 0 0 0 1000px black inset !important;
+  background-color: black !important;
+}
+
+@-moz-document url-prefix() {
+  input {
+    background-color: black !important;
+  }
+} */
+
+.custom-scrollbar {
+  /* Width of the scrollbar */
+  scrollbar-width: thin;
+
+  /* Colors for Firefox */
+  scrollbar-color: #6e6e6e #000;
+}
+
+/* For Webkit browsers like Chrome, Safari, Edge */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #6e6e6e;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

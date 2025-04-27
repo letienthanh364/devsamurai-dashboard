@@ -9,6 +9,7 @@ import {
   TooltipProps,
 } from "recharts";
 import { DataItem } from "../../DashBoardHome/useDashBoardHome.hook";
+import { cn } from "@/lib/utils";
 
 interface Chart_props {
   setActiveTab: Dispatch<SetStateAction<string>>;
@@ -30,9 +31,9 @@ export default function DashBoardChart({
   totals,
 }: Chart_props) {
   return (
-    <div className="rounded-xl border bg-card shadow w-full max-w-6xl mx-auto">
+    <div className="rounded-xl border border-border-common bg-card shadow w-full max-w-6xl mx-auto">
       {/* Header section */}
-      <div className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+      <div className="flex flex-col items-stretch space-y-0 border-b border-border-common borde p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <h3 className="font-semibold tracking-tight text-base text-left">
             Lead generation
@@ -46,10 +47,12 @@ export default function DashBoardChart({
         <div className="flex">
           <button
             onClick={() => setActiveTab("people")}
-            data-active={activeTab === "people"}
-            className={`relative z-10 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-l sm:border-t-0 sm:px-8 sm:py-6 ${
-              activeTab === "people" ? "bg-gray-100" : ""
-            }`}
+            className={cn(
+              "relative flex flex-1 flex-col items-center justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-l sm:border-t-0 border-border-common sm:px-8 sm:py-6",
+              {
+                "bg-white/10": activeTab === "people",
+              }
+            )}
           >
             <span className="text-xs text-gray-500">People</span>
             <span className="text-lg font-bold leading-none sm:text-3xl">
@@ -59,10 +62,12 @@ export default function DashBoardChart({
 
           <button
             onClick={() => setActiveTab("companies")}
-            data-active={activeTab === "companies"}
-            className={`relative z-10 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-l sm:border-t-0 sm:px-8 sm:py-6 ${
-              activeTab === "companies" ? "bg-gray-100" : ""
-            }`}
+            className={cn(
+              "relative flex flex-1 items-center flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-l sm:border-t-0 border-border-common sm:px-8 sm:py-6",
+              {
+                "bg-white/10": activeTab === "companies",
+              }
+            )}
           >
             <span className="text-xs text-gray-500">Companies</span>
             <span className="text-lg font-bold leading-none sm:text-3xl">
@@ -92,7 +97,10 @@ export default function DashBoardChart({
                 dy={8}
                 tick={{ fill: "#666", fontSize: 12 }}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip
+                cursor={{ fill: "rgba(255,255,255,0.4)" }}
+                content={<CustomTooltip />}
+              />
               <Bar
                 dataKey={activeTab}
                 fill={activeTab === "people" ? "#3b82f6" : "#10b981"}

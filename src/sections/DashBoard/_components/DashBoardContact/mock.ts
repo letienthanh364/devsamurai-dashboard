@@ -7,7 +7,7 @@ export const mock_Contacts: Contact[] = [
     name: "Vivian Casey",
     imageUrl:
       "https://demo.achromatic.dev/api/contact-images/0776ae41-7f9f-4783-bbd8-72a4bf5b91cc",
-    visitCount: 1,
+    visitCount: 6,
   },
   {
     id: "29ff3088-114b-4709-bacc-581f29438f71",
@@ -65,5 +65,27 @@ export const mock_leastVisitedContacts: Contact[] = [
     visitCount: 0,
     isCompany: true,
   },
-  // Add other least visited contacts from your data
+  {
+    id: "4c86a6cd-0325-4bcf-ab1f-40b6f22e6beb",
+    name: "Google",
+    imageUrl:
+      "https://demo.achromatic.dev/api/contact-images/4c86a6cd-0325-4bcf-ab1f-40b6f22e6beb",
+    visitCount: 0,
+    isCompany: true,
+  },
+  {
+    id: "646e6bdd-f29d-407b-86f4-d61821cec4ea",
+    name: "Gabriel Fischer",
+    imageUrl:
+      "https://demo.achromatic.dev/api/contact-images/646e6bdd-f29d-407b-86f4-d61821cec4ea",
+    visitCount: 0,
+  },
+  {
+    id: "896a4c26-412a-4631-ab79-9e6d053e0e44",
+    name: "Slack",
+    imageUrl:
+      "https://demo.achromatic.dev/api/contact-images/896a4c26-412a-4631-ab79-9e6d053e0e44",
+    visitCount: 0,
+    isCompany: true,
+  },
 ];

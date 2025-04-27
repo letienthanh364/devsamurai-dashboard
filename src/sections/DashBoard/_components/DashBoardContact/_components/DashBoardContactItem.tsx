@@ -15,8 +15,9 @@ export default function DashBoardContactItem({ contact }: ContactItemProps) {
     <Button
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      className="hover:!bg-bg-hovering !bg-transparent !text-sm !font-normal"
     >
-      <div className="w-full ">
+      <div className="w-full flex items-center gap-2 justify-start ">
         <Avatar
           src={contact.imageUrl}
           alt={contact.name}
@@ -26,20 +27,13 @@ export default function DashBoardContactItem({ contact }: ContactItemProps) {
             borderRadius: contact.isCompany ? "4px" : "50%",
           }}
         />
-        <p className="m-0 text-sm font-medium text-foreground">
-          {contact.name}
-        </p>
+        <p className="">{contact.name}</p>
       </div>
 
       {hover ? (
-        <ArrowForward
-          sx={{ width: 16, height: 16 }}
-          className="text-foreground"
-        />
+        <ArrowForward sx={{ width: 16, height: 16 }} className="" />
       ) : (
-        <p className="m-0 text-sm font-medium !text-foreground">
-          {contact.visitCount}
-        </p>
+        <p className="">{contact.visitCount}</p>
       )}
     </Button>
   );
