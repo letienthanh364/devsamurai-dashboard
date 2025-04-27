@@ -1,9 +1,10 @@
+import mainPaths from "@/constants/path";
 import Link from "next/link";
 import React from "react";
 
 export default function AuthFormHeader() {
   return (
-    <Link href="#">
+    <Link href={mainPaths.home}>
       <div className="flex items-center space-x-2 justify-center">
         <div className="flex size-9 items-center justify-center p-1">
           <div className="flex size-7 items-center justify-center rounded-md border ">
