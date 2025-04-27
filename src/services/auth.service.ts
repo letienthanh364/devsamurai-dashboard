@@ -41,7 +41,7 @@ const useAuth = () => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: "/",
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
       });
 
       // Update httpInstance for the current session
