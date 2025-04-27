@@ -1,5 +1,4 @@
 import mainPaths from "@/constants/path";
-import { useBoolean } from "@/hooks/useBoolean.hook";
 import { loginSchema, LoginSchema } from "@/rules/auth.rule";
 import AuthServices from "@/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,15 +40,10 @@ export const useLoginPage = () => {
     }
   });
 
-  const { value: showingPassword, onToggle: toggleShowingPassword } =
-    useBoolean();
-
   return {
     formMethods,
     error,
     onSubmit,
-    showingPassword,
-    toggleShowingPassword,
     loggingIn,
   };
 };

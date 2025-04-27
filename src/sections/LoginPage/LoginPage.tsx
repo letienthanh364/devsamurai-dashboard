@@ -2,12 +2,9 @@
 
 import Link from "next/link";
 import React from "react";
-import { Controller } from "react-hook-form";
 import { useLoginPage } from "./useLoginPage.hook";
 import { Button } from "@/components/ui/button";
 import mainPaths from "@/constants/path";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AuthGoogleButton from "../AuthPages/_components/AuthGoogleButton";
 import AuthMicrosoftButton from "../AuthPages/_components/AuthMicrosoftButton";
 import AuthFormHeader from "../AuthPages/_components/AuthFormHeader";
@@ -16,8 +13,7 @@ import ControlledInput from "@/components/inputs/ControlledInput";
 export default function LoginPage() {
   const {
     onSubmit,
-    toggleShowingPassword,
-    showingPassword,
+
     error,
     formMethods,
     loggingIn,

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ReactQueryClientProvider } from "@/utils/ReactQueryClientProvider";
+import { LocalizationProvider } from "@/locales/localization-provider";
+import AppStoreInitializer from "@/components/AppStoreInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[#09090b] text-[#FAFAFA]`}
       >
-        <ReactQueryClientProvider>
+        <LocalizationProvider>
+          <AppStoreInitializer />
           {children}
           <Toaster position="top-center" duration={2000} />
-        </ReactQueryClientProvider>
+        </LocalizationProvider>
       </body>
     </html>
   );

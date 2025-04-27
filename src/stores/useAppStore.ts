@@ -1,6 +1,4 @@
 import { User } from "@/types/user/user.type";
-import { getObjectCookie } from "@/utils/auth.util";
-import { getCookie } from "cookies-next";
 import { create } from "zustand";
 
 interface IAppStore {
@@ -10,20 +8,32 @@ interface IAppStore {
   isAuthenticated: boolean;
   setIsAuthenticated: (params: boolean) => void;
 
+  isInitialized: boolean;
+  setInitialized: (initialized: boolean) => void;
+
   clearAllData: () => void;
 }
+
+// Create the store without accessing cookies in the initial state
 const useAppStore = create<IAppStore>()((set) => ({
-  user: getObjectCookie("user_profile"),
+  user: null,
   setUser: (value: User | null) => {
     set((state) => ({ ...state, user: value }));
   },
 
-  isAuthenticated: Boolean(getCookie("access_token")),
+  isAuthenticated: false,
   setIsAuthenticated: (value: boolean) => {
     set((state) => ({ ...state, isAuthenticated: value }));
   },
 
-  clearAllData: () => {},
+  isInitialized: false,
+  setInitialized: (initialized: boolean) => {
+    set((state) => ({ ...state, isInitialized: initialized }));
+  },
+
+  clearAllData: () => {
+    set({ user: null, isAuthenticated: false });
+  },
 }));
 
 export default useAppStore;
