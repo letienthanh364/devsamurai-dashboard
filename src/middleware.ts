@@ -1,3 +1,5 @@
+//  middleware.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import mainPaths, { dashboardPaths } from "./constants/path";
 import { COOKIE_NAMES } from "./constants/cookies.const";
@@ -33,21 +35,16 @@ export default function middleware(req: NextRequest) {
   }
 
   // If not authenticated and trying to access protected routes, redirect to login
-  if (!isAuthenticated && !isAuthPage) {
-    // Exclude public paths that don't need authentication
-    const isPublicPath = [
-      "/",
-      "/about",
-      "/contact",
-      // Add other public paths here
-    ].includes(path);
-
-    if (!isPublicPath) {
-      url.pathname = mainPaths.login;
-      // Store the original URL to redirect back after login
-      url.searchParams.set("redirect", req.nextUrl.pathname);
-      return NextResponse.redirect(url);
-    }
+  if (
+    (!isAuthenticated && path.startsWith("/dashboard")) ||
+    (!isAuthenticated && path.startsWith("/profile")) ||
+    (!isAuthenticated && path.startsWith("/settings"))
+  ) {
+    // Add timestamp to make each URL unique - prevents caching issues
+    url.pathname = mainPaths.login;
+    url.searchParams.set("redirect", path);
+    url.searchParams.set("ts", Date.now().toString());
+    return NextResponse.redirect(url);
   }
 
   // Continue with the request

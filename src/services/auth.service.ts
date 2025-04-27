@@ -9,14 +9,12 @@ import { removeCookie, setObjectCookie } from "@/utils/auth.util";
 import httpInstance from "@/utils/axios.util";
 import { useMutation } from "@tanstack/react-query";
 import { getCookie, setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export const AUTH_KEY = "auth";
 
 const useAuth = () => {
   const { setUser, setIsAuthenticated, user, isAuthenticated } = useAppStore();
-  const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
@@ -41,7 +39,7 @@ const useAuth = () => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: "/",
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: "lax", // Changed to lax for better compatibility
       });
 
       // Update httpInstance for the current session
@@ -56,16 +54,11 @@ const useAuth = () => {
         setUser(user);
 
         // Store profile in cookie
-        setObjectCookie("user_profile", user);
+        setObjectCookie(COOKIE_NAMES.USER_PROFILE, user);
 
-        // Redirect to dashboard or previous page
-        const redirectUrl =
-          new URL(window.location.href).searchParams.get("redirect") ||
-          dashboardPaths.home;
-
-        router.push(redirectUrl);
-
-        return user; // Return the user object for the success message
+        // Force a hard navigation to trigger middleware
+        window.location.href = dashboardPaths.home;
+        return user;
       } catch (profileError) {
         throw profileError;
       }
@@ -76,8 +69,8 @@ const useAuth = () => {
 
   const handleLogout = () => {
     // Remove cookies
-    removeCookie("access_token");
-    removeCookie("user_profile");
+    removeCookie(COOKIE_NAMES.ACCESS_TOKEN);
+    removeCookie(COOKIE_NAMES.USER_PROFILE);
 
     // Reset HTTP instance
     httpInstance.setAccessToken(null);
@@ -89,13 +82,13 @@ const useAuth = () => {
     // Notification
     toast.success("Logged out successfully");
 
-    // Redirect to login page
-    router.push(mainPaths.login);
+    // Force a hard navigation to trigger middleware
+    window.location.href = mainPaths.login;
   };
 
   const checkAuthStatus = () => {
-    const token = getCookie("access_token");
-    const userProfile = getCookie("user_profile");
+    const token = getCookie(COOKIE_NAMES.ACCESS_TOKEN);
+    const userProfile = getCookie(COOKIE_NAMES.USER_PROFILE);
 
     if (token && userProfile) {
       try {

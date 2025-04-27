@@ -7,7 +7,7 @@ const AUTH_COOKIE_OPTIONS = {
   maxAge: 60 * 60 * 24 * 7, // 7 days
   path: "/",
   secure: process.env.NODE_ENV === "production",
-  sameSite: "strict" as const,
+  sameSite: "lax" as const, // Changed from "strict" to "lax" for better compatibility
 };
 
 // Utility function to set an object in cookies
@@ -34,5 +34,5 @@ export const getObjectCookie = (key: string) => {
 
 // Utility function to remove a cookie
 export const removeCookie = (key: string) => {
-  deleteCookie(key);
+  deleteCookie(key, { path: "/" }); // Ensure the cookie is removed with the same path
 };

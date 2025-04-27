@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getCookie } from "cookies-next";
+import { COOKIE_NAMES } from "@/constants/cookies.const";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
@@ -20,7 +21,7 @@ class HttpClient {
 
     // Initialize token from cookies if available
     if (typeof window !== "undefined") {
-      const token = getCookie("access_token");
+      const token = getCookie(COOKIE_NAMES.ACCESS_TOKEN);
       if (token) {
         this.accessToken = token as string;
       }
@@ -34,7 +35,7 @@ class HttpClient {
           config.headers.Authorization = `Bearer ${this.accessToken}`;
         } else {
           // Fallback to cookie (useful after page refresh)
-          const token = getCookie("access_token");
+          const token = getCookie(COOKIE_NAMES.ACCESS_TOKEN);
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
@@ -52,12 +53,10 @@ class HttpClient {
 
         // Handle 401 errors (unauthorized)
         if (error.response?.status === 401 && !originalRequest._retry) {
-          // You could implement refresh token logic here
-          // For now, we'll just reject with the error
-
-          // If running on client side, we might want to redirect to login
+          // If running on client side, redirect to login
           if (typeof window !== "undefined") {
-            // You could handle redirection here or through a centralized error handler
+            // Force a hard navigation to trigger middleware
+            window.location.href = "/auth/login";
           }
         }
 
