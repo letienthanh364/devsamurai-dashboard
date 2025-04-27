@@ -9,7 +9,16 @@ import {
 import DashBoardSidebarDropdown from "./_components";
 import useAppStore from "@/stores/useAppStore";
 import useDashBoardSidebarStore from "./DashBoardSidebar.store";
-import { Button, IconButton } from "@mui/material";
+import { Avatar, Button, Divider, IconButton } from "@mui/material";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import AuthServices from "@/services/auth.service";
 
 const buttonStyles = {
   textTransform: "none",
@@ -22,16 +31,19 @@ const buttonStyles = {
 };
 
 export default function DashBoardSidebar() {
+  const { handleLogout } = AuthServices.useAuth();
+
   const { toggle, isOpen } = useDashBoardSidebarStore();
   const { user, isInitialized } = useAppStore();
+  const pathname = usePathname();
 
-  const menuButtonClass =
-    "flex w-full items-center gap-2 overflow-hidden rounded-md p-2.5 text-left outline-none disabled:opacity-50 h-9 text-sm";
+  const menuButtonClassnames =
+    "flex w-full items-center gap-2 overflow-hidden rounded-md p-2.5 text-left outline-none disabled:opacity-50 h-9 text-sm hover:!bg-bg-hovering";
 
   // Don't render until store is initialized to prevent hydration mismatch
   if (!isInitialized) {
     return (
-      <div className="flex min-h-svh bg-[#09090b] border-r-[1px] border-[#27272a] flex-col w-16">
+      <div className="flex min-h-svh bg-sidebar-background border-r-[1px] border-[#27272a] flex-col w-16">
         {/* Loading skeleton */}
       </div>
     );
@@ -40,7 +52,7 @@ export default function DashBoardSidebar() {
   return (
     <div
       className={cn(
-        "flex min-h-svh bg-[#09090b] border-r-[1px] border-[#27272a] flex-col",
+        "flex min-h-svh bg-sidebar border-r-[1px] border-[#27272a] text-white flex-col",
         "transition-[width] duration-300 ease-in-out",
         {
           "w-60": isOpen,
@@ -52,8 +64,7 @@ export default function DashBoardSidebar() {
         willChange: "width",
       }}
     >
-      {/* Rest of your component remains the same */}
-      <div className="flex flex-col gap-2 p-3 w-full">
+      <div data-sidebar="header" className="flex flex-col gap-2 p-3 w-full">
         <div className="flex h-10 w-full flex-row items-center justify-between pl-0.5">
           <div
             className={cn(
@@ -100,7 +111,7 @@ export default function DashBoardSidebar() {
           </div>
           <IconButton
             onClick={toggle}
-            className="inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground size-9 shrink-0 rounded-full text-muted-foreground"
+            className="inline-flex items-center justify-center text-sm font-medium size-9 shrink-0 rounded-full !text-muted-foreground hover:!bg-white/10"
           >
             {isOpen ? (
               <svg
@@ -141,138 +152,196 @@ export default function DashBoardSidebar() {
       </div>
 
       {/* Main navigation section */}
-      <div className="relative flex w-full min-w-0 flex-col p-3">
-        <ul className="flex w-full min-w-0 flex-col gap-1">
-          {DashBoardSideBar_navigationItems.map((item, index) => (
-            <li key={index} className="relative">
-              <Button
-                data-size="default"
-                data-active={item.active ? "true" : "false"}
-                className={`${menuButtonClass} ${
-                  !item.active ? "opacity-80" : ""
-                }`}
-                data-state="closed"
-                // onClick={() => handleNavigation(item.path)}
-                disableRipple
-                disableElevation
-                sx={buttonStyles}
-              >
-                {item.icon}
-                <span
-                  className={cn(
-                    item.textClass,
-                    "whitespace-nowrap transition-all duration-300",
-                    {
-                      "opacity-0 w-0": !isOpen,
-                      "opacity-100 ml-2 w-auto": isOpen,
-                    }
-                  )}
+      <div
+        data-sidebar="group"
+        className="relative flex w-full min-w-0 flex-col p-3"
+      >
+        <ul data-sidebar="menu" className="flex w-full min-w-0 flex-col gap-1">
+          {DashBoardSideBar_navigationItems.map((item, index) => {
+            const isActive = pathname === item.path;
+            return (
+              <li key={index} className="relative">
+                <Link
+                  className={cn(menuButtonClassnames, {
+                    "text-opacity-100 bg-bg-hovering": isActive,
+                    "!text-opacity-80": !isActive,
+                    "!rounded-full": !isOpen,
+                  })}
+                  data-state="closed"
+                  href={item.path}
                 >
-                  {item.name}
-                </span>
-              </Button>
-            </li>
-          ))}
+                  {item.icon}
+                  <span
+                    className={cn(
+                      item.textClass,
+                      "whitespace-nowrap transition-all duration-300",
+                      {
+                        "opacity-0 w-0": !isOpen,
+                        "opacity-100 ml-2 w-auto": isOpen,
+                      }
+                    )}
+                  >
+                    {item.name}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
       <DashBoardSidebarDropdown title="Favorites">
-        <ul className="flex w-full min-w-0 flex-col gap-1">
-          {DashBoardSideBar_favoriteContacts.map((contact) => (
-            <li
-              key={contact.id}
-              className="group/menu-item relative"
-              tabIndex={0}
-              aria-disabled="false"
-              aria-roledescription="sortable"
-            >
-              <a
-                href={`/dashboard/contacts/${contact.id}`}
-                className="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2.5 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-9 group-data-[collapsible=icon]:!p-2.5 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-9 text-sm group/fav-item relative"
-                data-state="closed"
+        <ul data-sidebar="menu" className="flex w-full min-w-0 flex-col gap-1">
+          {DashBoardSideBar_favoriteContacts.map((contact) => {
+            return (
+              <li
+                key={contact.id}
+                data-sidebar="menu-item"
+                className="group/menu-item relative"
+                tabIndex={0}
               >
-                <span className="relative flex overflow-hidden size-4 flex-none shrink-0 rounded-md">
-                  <img
-                    className="aspect-square size-full"
-                    alt="avatar"
-                    src={contact.imageSrc}
-                  />
-                </span>
-                <span className="backface-hidden ml-0.5 truncate text-sm font-normal will-change-transform">
-                  {contact.name}
-                </span>
-              </a>
-            </li>
-          ))}
+                <Link
+                  href={`/dashboard/contacts/${contact.id}`}
+                  className="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2.5 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-9 group-data-[collapsible=icon]:!p-2.5 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-9 text-sm group/fav-item relative hover:bg-bg-hovering"
+                >
+                  <span className="relative flex overflow-hidden size-4 flex-none shrink-0 rounded-md">
+                    <Image
+                      className="aspect-square size-full"
+                      alt="avatar"
+                      src={contact.imageSrc}
+                      width={16}
+                      height={16}
+                    />
+                  </span>
+                  <span className="backface-hidden ml-0.5 truncate text-sm font-normal will-change-transform">
+                    {contact.name}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </DashBoardSidebarDropdown>
 
       <div className="relative flex w-full min-w-0 flex-col p-3 mt-auto pb-0">
-        <ul className="flex w-full min-w-0 flex-col gap-1">
-          {DashBoardSideBar_footerItems.map((item, index) => (
-            <li key={index} className="group/menu-item relative">
-              <Button
-                data-size="default"
-                data-active="false"
-                className={`${menuButtonClass} !text-muted-foreground`}
-                type="button"
-                data-state="closed"
-                onClick={item.action}
-                disableRipple
-                disableElevation
-                sx={buttonStyles}
+        <ul data-sidebar="menu" className="flex w-full min-w-0 flex-col gap-1">
+          {DashBoardSideBar_footerItems.map((item, index) => {
+            return (
+              <li
+                key={index}
+                data-sidebar="menu-item"
+                className="group/menu-item relative"
               >
-                {item.icon}
-                <span
-                  className={cn(
-                    "whitespace-nowrap transition-all duration-300",
-                    {
-                      "opacity-0 w-0": !isOpen,
-                      "opacity-100 ml-2 w-auto": isOpen,
-                    }
-                  )}
+                <Button
+                  data-sidebar="menu-button"
+                  data-size="default"
+                  data-active="false"
+                  className={`${menuButtonClassnames} !text-muted-foreground`}
+                  type="button"
+                  data-state="closed"
+                  onClick={item.action}
+                  disableRipple
+                  disableElevation
+                  sx={buttonStyles}
                 >
-                  {item.name}
-                </span>
-              </Button>
-            </li>
-          ))}
+                  {item.icon}
+                  <span
+                    className={cn(
+                      "whitespace-nowrap transition-all duration-300",
+                      {
+                        "opacity-0 w-0": !isOpen,
+                        "opacity-100 ml-2 w-auto": isOpen,
+                      }
+                    )}
+                  >
+                    {item.name}
+                  </span>
+                </Button>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
       {/* User profile section */}
-      <div className="flex flex-col gap-2 p-3">
-        <div className="relative flex w-full min-w-0 flex-col p-0">
-          <ul className="flex w-full min-w-0 flex-col gap-1">
-            <li className="group/menu-item relative">
-              <Button
-                className={`flex w-full items-center gap-2 overflow-hidden "justify-start" !pl-[2px] rounded-md text-left !text-black h-9 text-sm`}
-                disableRipple
-                disableElevation
-                sx={buttonStyles}
+      <div className="w-full p-3">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              className={cn(
+                "flex items-center justify-cente  !px-2.5  !w-full !text-white hover:!bg-bg-hovering",
+                {
+                  "!rounded-full !p-1": !isOpen,
+                }
+              )}
+              sx={buttonStyles}
+            >
+              <Avatar
+                alt="Name user"
+                src="/images/UserImage.jpg"
+                className="!h-7 !w-7"
+              />
+              <span
+                className={cn(
+                  "truncate text-sm font-medium leading-none whitespace-nowrap transition-all duration-300",
+                  {
+                    "opacity-0 w-0": !isOpen,
+                    "opacity-100 ml-2 w-auto": isOpen,
+                  }
+                )}
               >
-                <span className="relative flex shrink-0 overflow-hidden size-7 rounded-full">
-                  <img
-                    className="aspect-square size-full"
-                    alt="Name user"
-                    src="/images/UserImage.jpg"
-                  />
-                </span>
-                <span
-                  className={cn(
-                    "truncate text-sm font-medium leading-none whitespace-nowrap transition-all duration-300",
-                    {
-                      "opacity-0 w-0": !isOpen,
-                      "opacity-100 ml-2 w-auto": isOpen,
-                    }
-                  )}
-                >
-                  {user?.name || "User"}
-                </span>
-              </Button>
-            </li>
-          </ul>
-        </div>
+                {user?.name}
+              </span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 !bg-black !border-border-common p-1 gap-1 flex flex-col">
+            <div className="w-full flex flex-col gap-1 text-sm px-2 py-1.5">
+              <p className="font-medium text-white">{user?.name}</p>
+              <p className=" text-xs text-muted-foreground">{user?.email}</p>
+            </div>
+            <Divider className="!border-border-common" />
+
+            <div className="w-full flex flex-col text-sm font-medium">
+              <Link
+                href={"#"}
+                className="py-1.5 px-2 hover:bg-bg-hovering rounded-md"
+              >
+                Profile
+              </Link>
+              <Link
+                href={"#"}
+                className="py-1.5 px-2 hover:bg-bg-hovering rounded-md"
+              >
+                Billing
+              </Link>
+            </div>
+            <Divider className="!border-border-common" />
+
+            <div className="w-full flex flex-col text-sm font-medium capitalize">
+              <Link
+                href={"#"}
+                className="py-1.5 px-2 hover:bg-bg-hovering rounded-md"
+              >
+                Command menu
+              </Link>
+              <Link
+                href={"#"}
+                className="py-1.5 px-2 hover:bg-bg-hovering rounded-md"
+              >
+                Theme
+              </Link>
+            </div>
+
+            <Divider className="!border-border-common" />
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="py-1.5 px-2 hover:bg-bg-hovering rounded-md text-left font-medium"
+            >
+              Logout
+            </button>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

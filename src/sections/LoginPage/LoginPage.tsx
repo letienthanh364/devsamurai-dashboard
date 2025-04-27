@@ -22,7 +22,7 @@ export default function LoginPage() {
   const { control } = formMethods;
 
   return (
-    <div className="mx-auto font-[Inter] text-utility-blue-light-600 w-full min-w-[360px] space-y-6 max-w-sm justify-center flex flex-col">
+    <div className="mx-auto font-[Inter] w-full min-w-[360px] space-y-6 max-w-sm justify-center flex flex-col">
       <AuthFormHeader />
       <div className="rounded-[14px] border border-[#27272a] shadow text-left max-w-[382px] self-center">
         <div className="flex flex-col space-y-1.5 p-6">

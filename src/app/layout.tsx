@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { LocalizationProvider } from "@/locales/localization-provider";
 import AppStoreInitializer from "@/components/AppStoreInitializer";
+import { ReactQueryClientProvider } from "@/utils/ReactQueryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[#09090b] text-[#FAFAFA]`}
       >
-        <LocalizationProvider>
-          <AppStoreInitializer />
-          {children}
-          <Toaster position="top-center" duration={2000} />
-        </LocalizationProvider>
+        <ReactQueryClientProvider>
+          <LocalizationProvider>
+            <AppStoreInitializer />
+            {children}
+            <Toaster position="top-center" duration={2000} />
+          </LocalizationProvider>
+        </ReactQueryClientProvider>
       </body>
     </html>
   );
